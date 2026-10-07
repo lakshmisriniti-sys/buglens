@@ -1,0 +1,8 @@
+# Files Docker should NOT copy into the container (like .gitignore, but for Docker)
+venv/
+__pycache__/
+*.pyc
+*.db
+.env
+.git/
+.claude/

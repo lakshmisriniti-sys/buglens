@@ -1,0 +1,15 @@
+# Python virtual environment (each person creates their own)
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Secrets (API keys) - never push these to GitHub
+.env
+
+# Local database file
+*.db
+
+# Claude Code's local settings for this machine
+.claude/

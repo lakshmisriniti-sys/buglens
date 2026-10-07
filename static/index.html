@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BugLens</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🐛</span>
+      <div>
+        <h1>BugLens</h1>
+        <p class="tagline">Turning messy feedback into actionable tickets</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="btn" href="/report" target="_blank" rel="noopener">User report page ↗</a>
+      <button id="new-bug" class="btn primary">+ New bug</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Summary counts -->
+    <section class="stats">
+      <div class="stat"><span class="stat-num" id="stat-open">0</span><span class="stat-label">Open</span></div>
+      <div class="stat"><span class="stat-num" id="stat-in_progress">0</span><span class="stat-label">In progress</span></div>
+      <div class="stat"><span class="stat-num" id="stat-resolved">0</span><span class="stat-label">Resolved</span></div>
+      <div class="stat"><span class="stat-num" id="stat-closed">0</span><span class="stat-label">Closed</span></div>
+    </section>
+
+    <!-- Search and filters -->
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Search title, report or label…" />
+      <select id="filter-status">
+        <option value="">All statuses</option>
+        <option value="open">Open</option>
+        <option value="in_progress">In progress</option>
+        <option value="resolved">Resolved</option>
+        <option value="closed">Closed</option>
+      </select>
+      <select id="filter-priority">
+        <option value="">All priorities</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </section>
+
+    <!-- Bug list -->
+    <section class="card">
+      <table class="bugs">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Bug</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th class="hide-sm">Assignee</th>
+            <th class="hide-sm">Updated</th>
+          </tr>
+        </thead>
+        <tbody id="bug-rows"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden></div>
+    </section>
+  </main>
+
+  <!-- Create / edit form (a pop-up dialog) -->
+  <dialog id="editor">
+    <form id="bug-form">
+      <div class="dialog-head">
+        <h2 id="editor-title">New bug</h2>
+        <button type="button" class="icon-btn" id="close-editor" aria-label="Close">✕</button>
+      </div>
+
+      <label>Original report
+        <textarea name="raw_report" rows="3" placeholder="Paste the user's messy bug report here…"></textarea>
+      </label>
+
+      <div class="ai-row" id="ai-row">
+        <button type="button" class="btn ai" id="ai-generate">✨ Generate with AI</button>
+        <span class="hint">Fills in the fields below. Review them before saving.</span>
+      </div>
+      <p class="ai-note" id="ai-note" hidden>
+        Demo mode: these fields were filled in by simple keyword rules, not AI.
+        Add an API key to the <code>.env</code> file for real AI.
+      </p>
+
+      <label>Title *
+        <input name="title" required maxlength="200" placeholder="Short summary of the problem" />
+      </label>
+
+      <div class="row">
+        <label>Priority
+          <select name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </label>
+        <label>Status
+          <select name="status">
+            <option value="open">Open</option>
+            <option value="in_progress">In progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label>Environment
+          <input name="environment" placeholder="e.g. Chrome 128, Windows 11" />
+        </label>
+        <label>Assignee
+          <input name="assignee" placeholder="Who is fixing it?" />
+        </label>
+      </div>
+
+      <label><span>Steps to reproduce <span class="hint">(one per line)</span></span>
+        <textarea name="steps" rows="4" placeholder="Open login page&#10;Sign in&#10;…"></textarea>
+      </label>
+
+      <div class="row">
+        <label>Expected
+          <textarea name="expected" rows="3"></textarea>
+        </label>
+        <label>Actual
+          <textarea name="actual" rows="3"></textarea>
+        </label>
+      </div>
+
+      <label><span>Labels <span class="hint">(comma separated)</span></span>
+        <input name="labels" placeholder="authentication, session, chrome" />
+      </label>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn danger" id="delete-bug" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="cancel-editor">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status"></div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report a Problem</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="/static/report.js" defer></script>
+</head>
+<body class="report-page">
+  <main class="report-card">
+    <div class="brand">
+      <span class="logo">🐛</span>
+      <h1>Report a problem</h1>
+    </div>
+
+    <!-- Step 1: the form -->
+    <form id="report-form">
+      <p class="muted">
+        Something not working? Tell us in your own words. You don't need any technical details.
+      </p>
+
+      <label>What went wrong?
+        <textarea name="description" rows="7" required minlength="5" maxlength="5000"
+          placeholder="e.g. I tried to log in on my phone and it kept sending me back to the start page…"></textarea>
+      </label>
+
+      <div class="tips">
+        <strong>Helpful to mention:</strong>
+        <ul>
+          <li>What you were trying to do</li>
+          <li>What happened instead</li>
+          <li>Your device or browser (e.g. iPhone, Chrome)</li>
+        </ul>
+      </div>
+
+      <button type="submit" class="btn primary wide" id="send-report">Send report</button>
+      <p class="form-error" id="report-error" role="alert" hidden></p>
+    </form>
+
+    <!-- Step 2: the thank-you message -->
+    <div class="thanks" id="thanks" hidden>
+      <div class="thanks-icon">✅</div>
+      <h2>Thanks, we've got it!</h2>
+      <p class="muted">Your report was sent to our team.</p>
+      <p>Reference number: <strong id="report-id"></strong></p>
+      <button type="button" class="btn wide" id="report-another">Report another problem</button>
+    </div>
+  </main>
+</body>
+</html>
