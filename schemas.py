@@ -67,6 +67,11 @@ class UserReport(BaseModel):
     description: Annotated[str, StringConstraints(strip_whitespace=True, min_length=5, max_length=5000)]
 
 
+class LoginRequest(BaseModel):
+    """What the login page sends."""
+    password: str = Field(max_length=200)
+
+
 class ReportReceipt(BaseModel):
     """What the user gets back: just a reference number."""
     id: int

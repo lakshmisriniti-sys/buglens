@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="/static/login.js" defer></script>
+</head>
+<body class="report-page">
+  <main class="report-card">
+    <a class="back-link" href="/">← Home</a>
+    <div class="brand">
+      <span class="logo">🐛</span>
+      <h1>Team login</h1>
+    </div>
+
+    <form id="login-form">
+      <p class="muted">The bug dashboard is for team members only.</p>
+
+      <label>Team password
+        <input name="password" type="password" required autocomplete="current-password" autofocus />
+      </label>
+
+      <p class="demo-hint" id="demo-hint" hidden>
+        Trying the demo? The password is <code id="demo-password"></code>
+      </p>
+
+      <button type="submit" class="btn primary wide" id="login-button">Log in</button>
+      <p class="form-error" id="login-error" role="alert" hidden></p>
+    </form>
+  </main>
+</body>
+</html>

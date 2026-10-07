@@ -31,6 +31,11 @@ async function api(url, options = {}) {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
+  // 401 = not logged in (or the login expired): send them to the login page.
+  if (res.status === 401) {
+    location.href = "/login";
+    throw new Error("Please log in again.");
+  }
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
     try {
@@ -281,6 +286,10 @@ $("#cancel-editor").addEventListener("click", closeEditor);
 $("#bug-form").addEventListener("submit", saveBug);
 $("#delete-bug").addEventListener("click", deleteBug);
 $("#ai-generate").addEventListener("click", generateWithAI);
+$("#logout").addEventListener("click", async () => {
+  await fetch("/api/logout", { method: "POST" });
+  location.href = "/";
+});
 
 // Click a row to edit it (but not when clicking the status dropdown).
 $("#bug-rows").addEventListener("click", (event) => {

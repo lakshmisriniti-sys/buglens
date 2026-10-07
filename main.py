@@ -3,14 +3,18 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from ai import AIError, structure_report
+from auth import (
+    COOKIE_NAME, DEMO_PASSWORD, SESSION_SECONDS, create_session_token,
+    is_logged_in, password_is_correct, require_team, using_demo_password,
+)
 from database import get_connection, init_db, row_to_dict, seed_demo_data
 from schemas import (
-    Bug, BugCreate, BugUpdate, Priority, ReportReceipt, Status,
+    Bug, BugCreate, BugUpdate, LoginRequest, Priority, ReportReceipt, Status,
     StructureRequest, StructureResult, UserReport,
 )
 
@@ -33,22 +37,42 @@ async def lifespan(app: FastAPI):
 # The FastAPI "app" object. Every route (URL) we build gets attached to it.
 app = FastAPI(title="BugLens", lifespan=lifespan)
 
+# Routes for team members only. Every route added to this router runs
+# require_team first, which rejects anyone who isn't logged in (401).
+team = APIRouter(dependencies=[Depends(require_team)])
 
-# ---------- Website ----------
-# Visiting the home address (/) shows the dashboard page.
+
+# ---------- Website pages ----------
+# Home: a welcome page where people choose "Report a problem" or "Team login".
 @app.get("/", include_in_schema=False)
 def homepage():
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(STATIC_DIR / "welcome.html")
 
 
-# The public page where users report problems.
+# The public page where users report problems. No login needed.
 @app.get("/report", include_in_schema=False)
 def report_page():
     return FileResponse(STATIC_DIR / "report.html")
 
 
+# The team login page. Already logged in? Go straight to the dashboard.
+@app.get("/login", include_in_schema=False)
+def login_page(request: Request):
+    if is_logged_in(request):
+        return RedirectResponse("/team")
+    return FileResponse(STATIC_DIR / "login.html")
+
+
+# The team dashboard. Not logged in? Go to the login page first.
+@app.get("/team", include_in_schema=False)
+def team_dashboard(request: Request):
+    if not is_logged_in(request):
+        return RedirectResponse("/login")
+    return FileResponse(STATIC_DIR / "index.html")
+
+
 # Any address starting with /static/ is served straight from the static folder
-# (that's how the page loads style.css and app.js).
+# (that's how the pages load style.css and the .js files).
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
@@ -59,10 +83,45 @@ def health():
     return {"status": "ok", "app": "BugLens"}
 
 
-# ---------- AI: messy report -> structured ticket ----------
+# ---------- Login / logout ----------
+@app.post("/api/login")
+def login(credentials: LoginRequest, request: Request, response: Response):
+    if not password_is_correct(credentials.password):
+        raise HTTPException(status_code=401, detail="Wrong password. Please try again.")
+
+    # Hosting sites like Render handle HTTPS in front of the app and pass on
+    # the original scheme in this header.
+    is_https = request.headers.get("x-forwarded-proto", request.url.scheme) == "https"
+    response.set_cookie(
+        COOKIE_NAME,
+        create_session_token(),
+        max_age=SESSION_SECONDS,
+        httponly=True,    # JavaScript can't read it, so a malicious script can't steal it
+        samesite="lax",   # not sent along with requests started by other websites
+        secure=is_https,  # only sent over HTTPS when the site uses HTTPS
+    )
+    return {"ok": True}
+
+
+@app.post("/api/logout")
+def logout(response: Response):
+    response.delete_cookie(COOKIE_NAME)
+    return {"ok": True}
+
+
+@app.get("/api/auth/status")
+def auth_status(request: Request):
+    # The demo password is only revealed while the public demo password is in use.
+    return {
+        "logged_in": is_logged_in(request),
+        "demo_password": DEMO_PASSWORD if using_demo_password() else None,
+    }
+
+
+# ---------- AI: messy report -> structured ticket (team only) ----------
 # This only returns a suggestion. Nothing is saved until the person reviews it
 # in the form and clicks Save, so a human always checks the AI's work.
-@app.post("/api/ai/structure", response_model=StructureResult)
+@team.post("/api/ai/structure", response_model=StructureResult)
 def ai_structure(request: StructureRequest):
     try:
         return structure_report(request.raw_report)
@@ -87,12 +146,12 @@ def insert_bug(bug: BugCreate) -> int:
         return cursor.lastrowid
 
 
-@app.post("/api/bugs", response_model=Bug, status_code=201)
+@team.post("/api/bugs", response_model=Bug, status_code=201)
 def create_bug(bug: BugCreate):
     return get_bug(insert_bug(bug))
 
 
-# ---------- USER REPORTS (from the public /report page) ----------
+# ---------- USER REPORTS (from the public /report page, no login) ----------
 @app.post("/api/reports", response_model=ReportReceipt, status_code=201)
 def submit_report(report: UserReport):
     raw = report.description
@@ -112,7 +171,7 @@ def submit_report(report: UserReport):
 
 
 # ---------- READ (list, with optional filters) ----------
-@app.get("/api/bugs", response_model=list[Bug])
+@team.get("/api/bugs", response_model=list[Bug])
 def list_bugs(
     status: Optional[Status] = None,
     priority: Optional[Priority] = None,
@@ -137,7 +196,7 @@ def list_bugs(
 
 
 # ---------- READ (one bug) ----------
-@app.get("/api/bugs/{bug_id}", response_model=Bug)
+@team.get("/api/bugs/{bug_id}", response_model=Bug)
 def get_bug(bug_id: int):
     with get_connection() as conn:
         row = conn.execute("SELECT * FROM bugs WHERE id = ?", (bug_id,)).fetchone()
@@ -147,7 +206,7 @@ def get_bug(bug_id: int):
 
 
 # ---------- UPDATE ----------
-@app.patch("/api/bugs/{bug_id}", response_model=Bug)
+@team.patch("/api/bugs/{bug_id}", response_model=Bug)
 def update_bug(bug_id: int, changes: BugUpdate):
     # exclude_unset: only the fields the client actually sent.
     data = changes.model_dump(exclude_unset=True)
@@ -168,9 +227,13 @@ def update_bug(bug_id: int, changes: BugUpdate):
 
 
 # ---------- DELETE ----------
-@app.delete("/api/bugs/{bug_id}", status_code=204)
+@team.delete("/api/bugs/{bug_id}", status_code=204)
 def delete_bug(bug_id: int):
     with get_connection() as conn:
         cursor = conn.execute("DELETE FROM bugs WHERE id = ?", (bug_id,))
     if cursor.rowcount == 0:
         raise HTTPException(status_code=404, detail=f"Bug #{bug_id} not found")
+
+
+# Attach all the team-only routes to the app (this must come after they're defined).
+app.include_router(team)
