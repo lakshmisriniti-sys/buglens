@@ -6,7 +6,9 @@ Users report bugs like *"the login thing doesn't work sometimes and I get kicked
 Developers need a title, priority, environment, reproduction steps, and expected vs. actual behaviour.
 BugLens bridges that gap: paste a messy report, and it becomes a structured ticket on a team dashboard.
 
-> **Live demo:** _coming soon_ · The online demo resets its data periodically.
+> **Live demo:** <https://buglens-jwmd.onrender.com> · User report page: <https://buglens-jwmd.onrender.com/report>
+>
+> Free hosting: the first visit after a quiet spell can take up to a minute to wake up, and the demo data resets periodically. The live demo runs in demo mode (rule-based, no API key).
 
 ```text
 Messy user report  →  AI / rule-based processing  →  Structured ticket  →  Team dashboard
@@ -93,7 +95,7 @@ Interactive API docs are generated automatically at **`/docs`**.
 **Requirements:** Python 3.11+
 
 ```bash
-git clone https://github.com/<your-username>/buglens.git
+git clone https://github.com/lakshmisriniti-sys/buglens.git
 cd buglens
 python -m venv venv
 venv\Scripts\activate          # Windows

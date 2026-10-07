@@ -17,13 +17,13 @@ SYSTEMS = {
 # ---------- Priority: checked in this order, first match wins ----------
 PRIORITY_RULES = [
     ("critical", [
-        r"payments?", r"\bpay\b", r"charged", r"billing", r"refund",
+        r"payments?", r"\bpay\b", r"checkout", r"charged", r"billing", r"refund",
         r"security", r"\bhack", r"leak", r"data loss", r"lost (all|my)", r"deleted",
         r"(site|app|server) is down", r"nothing works", r"can'?t use (the|this) (app|site)",
     ]),
     ("high", [
         r"log ?in", r"sign ?in", r"logged out", r"kicked out", r"crash", r"freez",
-        r"can'?t", r"cannot", r"doesn'?t work", r"not working", r"broken", r"\berror",
+        r"can'?t", r"cannot", r"doesn'?t work", r"not working", r"broken", r"\bfail", r"\berror",
     ]),
     ("low", [
         r"typo", r"spelling", r"colou?r", r"\bfont", r"align", r"looks (weird|odd|off|bad)",
