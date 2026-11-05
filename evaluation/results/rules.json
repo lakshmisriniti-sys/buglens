@@ -1,0 +1,492 @@
+{
+  "summary": {
+    "reports": 50,
+    "failed_requests": 0,
+    "priority_accuracy": 0.56,
+    "priority_accuracy_95ci": [
+      0.4230578680014353,
+      0.6883801278976466
+    ],
+    "priority_macro_f1": 0.5417960088691796,
+    "per_priority": {
+      "low": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "support": 12
+      },
+      "medium": {
+        "precision": 0.4444444444444444,
+        "recall": 0.8571428571428571,
+        "f1": 0.5853658536585367,
+        "support": 14
+      },
+      "high": {
+        "precision": 0.8,
+        "recall": 0.6666666666666666,
+        "f1": 0.7272727272727272,
+        "support": 12
+      },
+      "critical": {
+        "precision": 0.5,
+        "recall": 0.4166666666666667,
+        "f1": 0.45454545454545453,
+        "support": 12
+      }
+    },
+    "confusion_matrix": {
+      "low": {
+        "low": 3,
+        "medium": 4,
+        "high": 1,
+        "critical": 4,
+        "failed": 0
+      },
+      "medium": {
+        "low": 0,
+        "medium": 12,
+        "high": 1,
+        "critical": 1,
+        "failed": 0
+      },
+      "high": {
+        "low": 0,
+        "medium": 4,
+        "high": 8,
+        "critical": 0,
+        "failed": 0
+      },
+      "critical": {
+        "low": 0,
+        "medium": 7,
+        "high": 0,
+        "critical": 5,
+        "failed": 0
+      }
+    },
+    "environment_recall": 1.0,
+    "area_hit_rate": 0.6,
+    "injection_resisted": "1/4"
+  },
+  "details": [
+    {
+      "id": 1,
+      "gold": "critical",
+      "predicted": "critical",
+      "labels": [
+        "payments"
+      ]
+    },
+    {
+      "id": 2,
+      "gold": "critical",
+      "predicted": "critical",
+      "labels": [
+        "payments",
+        "safari"
+      ]
+    },
+    {
+      "id": 3,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "data"
+      ]
+    },
+    {
+      "id": 4,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 5,
+      "gold": "critical",
+      "predicted": "critical",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 6,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 7,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "authentication",
+        "chrome"
+      ]
+    },
+    {
+      "id": 8,
+      "gold": "critical",
+      "predicted": "critical",
+      "labels": [
+        "payments"
+      ]
+    },
+    {
+      "id": 9,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "ui"
+      ]
+    },
+    {
+      "id": 10,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 11,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "authentication",
+        "performance",
+        "ui",
+        "chrome",
+        "firefox"
+      ]
+    },
+    {
+      "id": 12,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "crash"
+      ]
+    },
+    {
+      "id": 13,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "uploads"
+      ]
+    },
+    {
+      "id": 14,
+      "gold": "high",
+      "predicted": "medium",
+      "labels": [
+        "search"
+      ]
+    },
+    {
+      "id": 15,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "notifications"
+      ]
+    },
+    {
+      "id": 16,
+      "gold": "high",
+      "predicted": "medium",
+      "labels": [
+        "authentication",
+        "notifications"
+      ]
+    },
+    {
+      "id": 17,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "ui",
+        "data",
+        "edge"
+      ]
+    },
+    {
+      "id": 18,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 19,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "performance",
+        "ui"
+      ]
+    },
+    {
+      "id": 20,
+      "gold": "high",
+      "predicted": "high",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 21,
+      "gold": "high",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 22,
+      "gold": "high",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 23,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 24,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "performance",
+        "firefox"
+      ]
+    },
+    {
+      "id": 25,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "notifications"
+      ]
+    },
+    {
+      "id": 26,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 27,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "data"
+      ]
+    },
+    {
+      "id": 28,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "performance",
+        "uploads"
+      ]
+    },
+    {
+      "id": 29,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "search",
+        "safari"
+      ]
+    },
+    {
+      "id": 30,
+      "gold": "medium",
+      "predicted": "high",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 31,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "notifications"
+      ]
+    },
+    {
+      "id": 32,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "ui"
+      ]
+    },
+    {
+      "id": 33,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 34,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 35,
+      "gold": "low",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 36,
+      "gold": "low",
+      "predicted": "low",
+      "labels": [
+        "content"
+      ]
+    },
+    {
+      "id": 37,
+      "gold": "low",
+      "predicted": "low",
+      "labels": [
+        "ui"
+      ]
+    },
+    {
+      "id": 38,
+      "gold": "low",
+      "predicted": "medium",
+      "labels": [
+        "chrome"
+      ]
+    },
+    {
+      "id": 39,
+      "gold": "low",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 40,
+      "gold": "low",
+      "predicted": "low",
+      "labels": [
+        "ui"
+      ]
+    },
+    {
+      "id": 41,
+      "gold": "low",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 42,
+      "gold": "low",
+      "predicted": "critical",
+      "labels": [
+        "payments",
+        "ui"
+      ]
+    },
+    {
+      "id": 43,
+      "gold": "low",
+      "predicted": "high",
+      "labels": [
+        "authentication",
+        "crash",
+        "ui"
+      ]
+    },
+    {
+      "id": 44,
+      "gold": "low",
+      "predicted": "critical",
+      "labels": [
+        "payments",
+        "content"
+      ]
+    },
+    {
+      "id": 45,
+      "gold": "medium",
+      "predicted": "medium",
+      "labels": [
+        "needs-triage"
+      ]
+    },
+    {
+      "id": 46,
+      "gold": "critical",
+      "predicted": "medium",
+      "labels": [
+        "uploads"
+      ]
+    },
+    {
+      "id": 47,
+      "gold": "low",
+      "predicted": "critical",
+      "labels": [
+        "ui"
+      ]
+    },
+    {
+      "id": 48,
+      "gold": "low",
+      "predicted": "critical",
+      "labels": [
+        "content"
+      ]
+    },
+    {
+      "id": 49,
+      "gold": "medium",
+      "predicted": "critical",
+      "labels": [
+        "authentication",
+        "performance",
+        "search"
+      ]
+    },
+    {
+      "id": 50,
+      "gold": "critical",
+      "predicted": "critical",
+      "labels": [
+        "payments"
+      ]
+    }
+  ]
+}

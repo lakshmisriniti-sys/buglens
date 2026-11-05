@@ -162,6 +162,9 @@ def submit_report(report: UserReport):
         # Never lose a user's report: if the AI fails, save it untidied for a person to sort out.
         fields = {"title": raw[:80], "labels": ["needs-triage"]}
 
+    # The AI's title isn't length-checked, so make sure it fits before saving.
+    fields["title"] = (fields["title"].strip() or raw)[:200]
+
     # Tag it so the team can tell which bugs came straight from users.
     fields["labels"] = [*fields.get("labels", []), "user-report"]
     new_id = insert_bug(BugCreate(raw_report=raw, **fields))

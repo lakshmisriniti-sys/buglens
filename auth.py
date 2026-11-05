@@ -53,7 +53,7 @@ def create_session_token() -> str:
 def is_logged_in(request: Request) -> bool:
     token = request.cookies.get(COOKIE_NAME, "")
     expires, _, signature = token.partition(".")
-    if not expires.isdigit() or not hmac.compare_digest(signature, _sign(expires)):
+    if not expires.isdigit() or not hmac.compare_digest(signature.encode(), _sign(expires).encode()):
         return False
     return int(expires) > time.time()
 

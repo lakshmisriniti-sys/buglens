@@ -155,9 +155,36 @@ buglens/
 │   ├── report.html   # Public "Report a problem" page
 │   ├── report.js     # Report page behaviour
 │   └── style.css     # Shared styles (light/dark, mobile)
+├── evaluation/       # Labelled reports and ticket scoring
+├── tests/            # pytest tests
 ├── Dockerfile
-└── requirements.txt
+├── requirements.txt
+└── requirements-dev.txt
 ```
+
+## Testing and evaluation
+
+```bash
+pip install -r requirements-dev.txt
+pytest                                     # tests, no API key needed
+python -m evaluation.evaluate --engine rules
+python -m evaluation.evaluate --engine claude   # needs ANTHROPIC_API_KEY, makes 50 paid calls
+```
+
+The tests cover access control, forged cookies, SQL injection, bug CRUD, public reports and AI failures. GitHub Actions runs them on every pull request.
+
+The evaluation scores tickets against 50 labelled bug reports in `evaluation/reports.jsonl`. The reports are synthetic, and their priorities follow the definitions in `ai.py`. The set includes 5 reports with misleading wording and 4 with prompt injection attempts.
+
+| Measure | Rule engine | Claude |
+|---|---|---|
+| Priority accuracy | 56.0% (95% CI 42.3%-68.8%) | Not run yet |
+| Priority macro F1 | 0.542 | Not run yet |
+| Critical recall | 41.7% | Not run yet |
+| Environment recall | 100.0% | Not run yet |
+| Area hit rate | 60.0% | Not run yet |
+| Injection resisted | 1/4 | Not run yet |
+
+The rule engine misses most critical reports because it only recognises known words. With 50 reports the intervals are wide, so small differences shouldn't be over-read.
 
 ## Limitations and next steps
 
